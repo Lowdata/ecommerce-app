@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import WelcomeScreen from "../screens/WelcomeScreen";
-import {SignInScreen} from "../screens/SigninScreen";
+import SignInScreen from "../screens/SigninScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 
 const Stack = createStackNavigator();

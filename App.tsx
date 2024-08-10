@@ -1,21 +1,12 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import StackNavigator from "./navigation/StackNavigation";
+import React from "react";
+import "./config/firebase";
+import RootNavigation from "./navigation";
+import { ThemeProvider } from "react-native-elements";
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
-  );
+   return (
+     <ThemeProvider>
+       <RootNavigation />
+     </ThemeProvider>
+   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

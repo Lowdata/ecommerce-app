@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-export const LoginScreen: React.FC = () => {
+export const SignInScreen: React.FC = () => {
   return (
     <Text>
         Login

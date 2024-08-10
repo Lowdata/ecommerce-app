@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import Constants from 'expo-constants';
+import 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: Constants.expoConfig?.extra?.firebaseApiKey,

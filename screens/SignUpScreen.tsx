@@ -14,7 +14,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
     error: "",
   });
 
-  function signUp() {
+  async function signUp() {
     if (value.email === "" || value.password === "") {
       setValue({
         ...value,
@@ -23,10 +23,15 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
       return;
     }
 
-    setValue({
-      ...value,
-      error: "",
-    });
+    try {
+      await createUserWithEmailAndPassword(auth, value.email, value.password);
+      navigation.navigate("Sign In");
+    } catch (error) {
+      setValue({
+        ...value,
+        error : error.message,
+      });
+    }
   }
 
   return (

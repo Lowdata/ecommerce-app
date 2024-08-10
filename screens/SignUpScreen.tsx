@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackScreenProps } from "@react-navigation/stack";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 const auth = getAuth();
 
@@ -27,9 +28,11 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
       await createUserWithEmailAndPassword(auth, value.email, value.password);
       navigation.navigate("Sign In");
     } catch (error) {
+      const errorMessage =
+        (error as FirebaseError).message || "An unexpected error occurred";
       setValue({
         ...value,
-        error : error.message,
+        error: errorMessage,
       });
     }
   }

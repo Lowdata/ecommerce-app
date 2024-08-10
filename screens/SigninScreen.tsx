@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 const auth = getAuth();
 
@@ -25,9 +26,11 @@ const SignInScreen = () => {
     try {
       await signInWithEmailAndPassword(auth, value.email, value.password);
     } catch (error) {
+      const errorMessage =
+        (error as FirebaseError).message || "An unexpected error occurred";
       setValue({
         ...value,
-        error: error.message,
+        error: errorMessage,
       });
     }
   }

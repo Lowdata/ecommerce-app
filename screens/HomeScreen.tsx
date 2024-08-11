@@ -9,27 +9,22 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../types";
 
-interface Product {
+export interface Product {
   id: number;
   title: string;
-  category: string;
   price: number;
   image: string;
 }
 
-const categories = [
-  "All",
-  "Electronics",
-  "Clothing",
-  "Home",
-  "Jewelry",
-  "Toys",
-];
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Main">;
 
-const HomeScreen = () => {
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -37,17 +32,12 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [page, selectedCategory]);
+  }, [page]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      let url = `https://fakestoreapi.com/products`;
-      if (selectedCategory !== "All") {
-        url += `&category=${selectedCategory.toLowerCase()}`;
-      }
-      const call = (url += `?limit=10&page=${page}`);
-      const response = await fetch(call);
+      const response = await fetch(`https://fakestoreapi.com/products`);
       const data = await response.json();
       if (data.length < 10) {
         setHasMore(false);
@@ -66,17 +56,15 @@ const HomeScreen = () => {
     }
   };
 
-  const filteredProducts = products.filter((product) => {
-    const isInCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    const matchesSearch = product.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return isInCategory && matchesSearch;
-  });
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const renderProduct = ({ item }: { item: Product }) => (
-    <TouchableOpacity style={styles.productContainer}>
+    <TouchableOpacity
+      style={styles.productContainer}
+      onPress={() => navigation.navigate("ProductDetails", { product: item })}
+    >
       <Image source={{ uri: item.image }} style={styles.productImage} />
       <Text style={styles.productName}>{item.title}</Text>
       <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
@@ -90,33 +78,8 @@ const HomeScreen = () => {
         placeholder="Search products..."
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
+        placeholderTextColor="#888"
       />
-      <View style={styles.categoryContainer}>
-        {categories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.categoryButton,
-              selectedCategory === category && styles.selectedCategoryButton,
-            ]}
-            onPress={() => {
-              setSelectedCategory(category);
-              setPage(1);
-              setProducts([]);
-              setHasMore(true);
-            }}
-          >
-            <Text
-              style={[
-                styles.categoryText,
-                selectedCategory === category && styles.selectedCategoryText,
-              ]}
-            >
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
       <FlatList
         data={filteredProducts}
         renderItem={renderProduct}
@@ -129,7 +92,7 @@ const HomeScreen = () => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
         ListFooterComponent={
-          loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
+          loading ? <ActivityIndicator size="large" color="#ff6347" /> : null
         }
       />
     </View>
@@ -140,74 +103,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 10,
+    padding: 15,
   },
   searchBar: {
-    height: 40,
-    borderColor: "#ddd",
+    height: 45,
+    borderColor: "#ff7f50",
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  categoryContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    marginBottom: 10,
-  },
-  categoryButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    backgroundColor: "#eee",
-    margin: 5,
-  },
-  selectedCategoryButton: {
-    backgroundColor: "tomato",
-  },
-  categoryText: {
-    fontSize: 14,
-    color: "#333",
-  },
-  selectedCategoryText: {
-    color: "#fff",
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    color: "#ff7f50",
+    backgroundColor: "#E9ECEF",
+    marginBottom: 20,
   },
   productList: {
-    paddingBottom: 20,
+    paddingBottom: 30,
   },
   productContainer: {
     flex: 1,
     alignItems: "center",
-    margin: 5,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#f9f9f9",
+    margin: 10,
+    padding: 15,
+    borderRadius: 15,
+    backgroundColor: "#2e2e2e",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1.5,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 4,
   },
   productImage: {
-    width: 100,
-    height: 100,
-    marginBottom: 5,
+    width: 120,
+    height: 120,
+    marginBottom: 10,
+    borderRadius: 10,
   },
   productName: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#fff",
     textAlign: "center",
   },
   productPrice: {
-    fontSize: 14,
-    color: "gray",
+    fontSize: 16,
+    color: "#ff6347",
+    marginTop: 5,
   },
   noResultsText: {
     textAlign: "center",
     fontSize: 16,
     marginTop: 20,
-    color: "gray",
+    color: "#888",
   },
 });
 

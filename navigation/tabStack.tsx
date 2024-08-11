@@ -12,7 +12,7 @@ const TabNavigation = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap = "home-outline"; // Default icon
+          let iconName: keyof typeof Ionicons.glyphMap = "home-outline";
 
           if (route.name === "Home") {
             iconName = "home-outline";

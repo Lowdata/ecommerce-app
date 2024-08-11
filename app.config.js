@@ -31,6 +31,7 @@ export default {
       firebaseStorageBucket: process.env.STORAGE_BUCKET,
       firebaseMessagingSenderId: process.env.MESSAGING_SENDER_ID,
       firebaseAppId: process.env.APP_ID,
+      database: process.env.MONGODB
     },
   },
 };

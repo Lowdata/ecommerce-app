@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
-import {CartScreen} from "../screens/CartScreen";
+import CartScreen from "../screens/CartScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -12,7 +12,7 @@ const TabNavigation = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap = "home-outline"; // Default icon
+          let iconName: keyof typeof Ionicons.glyphMap = "home-outline";
 
           if (route.name === "Home") {
             iconName = "home-outline";
